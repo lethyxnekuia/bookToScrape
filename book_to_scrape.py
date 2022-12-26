@@ -17,7 +17,17 @@ def get_book(link):
     category= soup.find(class_='breadcrumb').find_all('a')[2].text
     review_rating= soup.find('p', class_='star-rating').get('class')[1]
     image_url= soup.find('div', class_='item active').find_next('img').get('src')
-    return[universal_product_code, title, price_including_tax, price_excluding_tax, number_available, product_description, category, review_rating, urljoin("http://books.toscrape.com/",image_url)]
+    return {
+        'universal_product_code' : universal_product_code, 
+        'title' : title,
+        'price_including_tax' : price_including_tax,
+        'price_excluding_tax' : price_excluding_tax,
+        'number_available' : number_available,
+        'product_description' : product_description,
+        'category' : category,
+        'review_rating' : review_rating,
+        'image_url' : urljoin("http://books.toscrape.com/",image_url)
+    }
 
 def get_categories():
     data = {}
@@ -47,13 +57,19 @@ def get_books_data(url):
         links.extend(get_books_data(next_page_url))
     return links
 
-
+def save_img(url, category_name, path):
+    r = requests.get(url)
+    os.makedirs('images', exist_ok=True)
+    os.makedirs('images/'+ category_name, exist_ok=True)
+    with open ('images/'+  category_name + '/' + path + '.jpg', 'wb') as img_file:
+        img_file.write(r.content)
 
 for category_name,category_url in get_categories().items():
     os.makedirs('data_csv', exist_ok=True)
     with open('data_csv/' + category_name + '.csv', 'w', encoding='utf-8') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
-        writer.writerow(["universal_product_code", "title", "price_including_tax", "price_excluding_tax", "number_available", "product_description", "category", "review_rating", "image_url"])
+        writer.writerow(["universal_product_code","title","price_including_tax","price_excluding_tax","number_available","product_description","category","review_rating","image_url"])
         for url in get_books_data(category_url):
             book = get_book(url)
-            writer.writerow(book)
+            writer.writerow([book['universal_product_code'],book['title'],book['price_including_tax'],book['price_excluding_tax'],book['number_available'],book['product_description'],book['category'],book['review_rating'],book['image_url']])
+            save_img(url = book['image_url'], category_name = book['category'], path = book['universal_product_code'])
