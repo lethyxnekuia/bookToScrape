@@ -26,18 +26,18 @@ def get_book(link):
         'product_description' : product_description,
         'category' : category,
         'review_rating' : review_rating,
-        'image_url' : urljoin("http://books.toscrape.com/",image_url)
+        'image_url' : urljoin(link,image_url)
     }
 
-def get_categories():
+def get_categories(url):
     data = {}
-    response = requests.get('https://books.toscrape.com/')
+    response = requests.get(url)
     soup = BeautifulSoup(response.content, 'html.parser')
     category_scrape = soup.find('div', class_='side_categories').find('li').find_all('li')
     for category in category_scrape:
         books_url = category.find('a', href = True).get('href')
         category_name = category.text.strip() 
-        data[category_name] = urljoin('https://books.toscrape.com/',books_url)
+        data[category_name] = urljoin(url,books_url)
     return data
 
 
@@ -47,8 +47,8 @@ def get_books_data(url):
     soup = BeautifulSoup(r.content, 'html.parser')
     for books in soup.find_all('article', class_='product_pod'):
         books_link_url = books.find('a', href = True)
-        books_url = books_link_url.get('href').strip('../../../')
-        links.append(urljoin('https://books.toscrape.com/catalogue/',books_url))
+        books_url = books_link_url.get('href')
+        links.append(urljoin(url,books_url))
     next = soup.find('li', class_='next')
     if next is not None:
         next_page = url.split('/')[0 : -1]
@@ -58,13 +58,13 @@ def get_books_data(url):
     return links
 
 def save_img(url, category_name, path):
-    r = requests.get(url)
+    res = requests.get(url)
     os.makedirs('images', exist_ok=True)
     os.makedirs('images/'+ category_name, exist_ok=True)
     with open ('images/'+  category_name + '/' + path + '.jpg', 'wb') as img_file:
-        img_file.write(r.content)
+        img_file.write(res.content)
 
-for category_name,category_url in get_categories().items():
+for category_name,category_url in get_categories('https://books.toscrape.com/').items():
     os.makedirs('data_csv', exist_ok=True)
     with open('data_csv/' + category_name + '.csv', 'w', encoding='utf-8') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')

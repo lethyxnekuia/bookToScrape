@@ -1,5 +1,8 @@
-Install package
-pip install beautifulsoup4
+# Install package
+pip install -r requirements.txt
 
-copy repository
+# Copy repository
 https://github.com/lethyxnekuia/bookToScrape
+
+# Run 
+py book_to_scrape.py

@@ -1,0 +1,19 @@
+Bonjour Sam,
+
+Comme vous me l'avez demandé, voici un mail qui vous explique en quoi ce code pourrait vous aider à établir une pipeline ETL.
+Une ETL se découpe en 3 étapes, l'extraction des données, la transformation de ces données et enfin l'enregitrement de ces données.
+grâce à ce code vous pouvez déjà faire la première étape : l'extraction. En effet le code permet d'extraire en format csv de nombreuses données du site de vente de livre. 
+
+Vous pourriez ensuite faire une transformation de ces données pour les exploiter, voici quelques exemples :
+	- Suivi de l'evolution du prix d'un livre.
+	- Dans quels categories il y'a le plus de livre
+	- Quels categories de livre sont lmes plus chère
+	- evolution du stock et donc quels livres se vendent le plus
+	- quels categories de livre se vendent le plus
+	- ...
+J'espère que ce mail t'aidera à voir plus clair sur l'utilité du code pour établir une pipeline ETL, ainsi que les avantages que cela peut t'apporter.
+
+Cordialement
+
+Maxime
+
